@@ -33,6 +33,7 @@ $PAGE->set_url(new moodle_url('/blocks/mystudents/view.php'));
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('admin');
+$PAGE->set_title(get_string('mystudents', 'block_mystudents'));
 
 echo $OUTPUT->header();
 
@@ -59,7 +60,7 @@ foreach ($mycourses as $course) {
 }
 ksort($students);
 $table = new html_table();
-$table->head = array('lastname', 'firstname', get_string('progcode', 'block_mystudents'), get_string('courses'));
+$table->head = array(get_string('lastname'), get_string('firstname'), get_string('progcode', 'block_mystudents'), get_string('courses'));
 
 foreach ($students as $student => $info) {
     $courses = $info['courses'];
