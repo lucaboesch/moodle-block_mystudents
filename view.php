@@ -33,6 +33,7 @@ $PAGE->set_url(new moodle_url('/blocks/mystudents/view.php'));
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('admin');
+$PAGE->set_heading(get_string('mystudents', 'block_mystudents'));
 $PAGE->set_title(get_string('mystudents', 'block_mystudents'));
 
 echo $OUTPUT->header();
@@ -50,7 +51,8 @@ foreach ($mycourses as $course) {
         // pour chaque cours, obtenir la liste des participants
         $studentlist = get_student_list_fo_course ($courseid);
         foreach ($studentlist as $student) {
-            $key = $student['lastname'] . '_' . $student['firstname'];
+            $key = str_replace('', '_', $student['lastname']) . '_' . str_replace('', '_', $student['firstname']);
+           //$key = strotoupper($key);
             if (!array_key_exists($key, $students)) {
                 $students[$key] = array('lastname' => $student['lastname'], 'firstname' => $student['firstname'], 'userid' => $student['id'], 'courses' => array());
             }
@@ -59,6 +61,7 @@ foreach ($mycourses as $course) {
     }
 }
 ksort($students);
+//array_multisort($students, natsort(array_keys($students)));
 $table = new html_table();
 $table->head = array(get_string('lastname'), get_string('firstname'), get_string('progcode', 'block_mystudents'), get_string('courses'));
 

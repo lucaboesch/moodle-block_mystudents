@@ -22,7 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['participants:addinstance'] = 'Add a new student block';
+$string['mystudents:addinstance'] = 'Add a new student block';
+$string['mystudents:myaddinstance'] = 'Add a new student block';
 $string['pluginname'] = 'My Students';
 $string['mystudents'] = 'My students';
 $string['progcode'] = 'Program code';
