@@ -27,3 +27,4 @@ $string['mystudents:myaddinstance'] = 'Ajouter un nouveau bloc Mes étudiants';
 $string['pluginname'] = 'Mes étudiants';
 $string['mystudents'] = 'Mes étudiants';
 $string['progcode'] = 'Code programme';
+$string['progcodename'] = 'Programme d\'étude';
