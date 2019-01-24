@@ -49,7 +49,7 @@ foreach ($mycourses as $course) {
     $courseid = $course->id;
     if (is_allowed_to_display_students($courseid)) {
         // pour chaque cours, obtenir la liste des participants
-        $studentlist = get_student_list_fo_course ($courseid);
+        $studentlist = get_student_list_for_course ($courseid);
         foreach ($studentlist as $student) {
             $key = str_replace('', '_', $student['lastname']) . '_' . str_replace('', '_', $student['firstname']);
            //$key = strotoupper($key);
@@ -63,7 +63,9 @@ foreach ($mycourses as $course) {
 ksort($students);
 //array_multisort($students, natsort(array_keys($students)));
 $table = new html_table();
-$table->head = array(get_string('lastname'), get_string('firstname'), get_string('progcode', 'block_mystudents'), get_string('courses'));
+$table->head = array(get_string('lastname'), get_string('firstname'), get_string('progcode', 'block_mystudents'), get_string('progcodename', 'block_mystudents'), get_string('courses'));
+
+$programlist = get_unamur_program_list(); 
 
 foreach ($students as $student => $info) {
     $courses = $info['courses'];
@@ -72,6 +74,11 @@ foreach ($students as $student => $info) {
     $row->cells[] = $info['firstname'];
     $progcode = get_ldap_prog_code_for_user($info['userid']);
     $row->cells[] = implode(', ', $progcode);
+    $progcodenames = array();
+    foreach ($progcode as $key=>$elt) {
+        $progcodenames[$key] = $porgramlist[$elt];
+    }
+    $row->cells[] = implode(', ', $progcodenames);
     $row->cells[] = implode(', ', $courses);
     $table->data[] = $row;
 }
