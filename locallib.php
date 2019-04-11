@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 function is_allowed_to_display_students($courseid) {
-    global $USER, $context;
+    global $context;
     if (has_capability('moodle/site:config', $context)) {
         return true;
     }

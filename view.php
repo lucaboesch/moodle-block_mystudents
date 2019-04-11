@@ -49,24 +49,16 @@ foreach ($mycourses as $course) {
     $courseid = $course->id;
     if (is_allowed_to_display_students($courseid)) {
         // For each course get all the users.
-        /*
-         * @todo : Replace this function buy a local function.
-         * ? Se baser sur 
-         * user_get_participants_sql($courseid, $groupid = 0, $accesssince = 0, $roleid = 0, $enrolid = 0, $statusid = -1,
-                                   $search = '', $additionalwhere = '', $additionalparams = array())
-         * avec roleid=5
-         */
         list ($select, $from, $where, $params) = user_get_participants_sql($courseid, 0, 0, 5);
         $list = $DB->get_recordset_sql("$select $from $where", $params);
         foreach ($list as $student) {
             $key = str_replace('', '_', $student->lastname) . '_' . str_replace('', '_', $student->firstname);
             if (!array_key_exists($key, $students)) {
-                $students[$key] = array('lastname' => $student->lastname, 'firstname' => $student->firstname, 'email' => $student->email,
-                    'userid' => $student->id,'courses' => array());
+                $students[$key] = array('lastname' => $student->lastname, 'firstname' => $student->firstname,
+                    'email' => $student->email, 'userid' => $student->id,'courses' => array());
             }
             $students[$key]['courses'][] = $course->shortname;
         }
-
     }
 }
 ksort($students);
