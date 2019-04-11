@@ -55,7 +55,7 @@ foreach ($mycourses as $course) {
             $key = str_replace('', '_', $student->lastname) . '_' . str_replace('', '_', $student->firstname);
             if (!array_key_exists($key, $students)) {
                 $students[$key] = array('lastname' => $student->lastname, 'firstname' => $student->firstname,
-                    'email' => $student->email, 'userid' => $student->id,'courses' => array());
+                    'email' => $student->email, 'userid' => $student->id, 'courses' => array());
             }
             $students[$key]['courses'][] = $course->shortname;
         }
@@ -68,7 +68,7 @@ $table->head = array(get_string('lastname'), get_string('firstname'), get_string
 
 foreach ($students as $student => $info) {
     $courses = $info['courses'];
-    $row = new html_table_row();   
+    $row = new html_table_row();
     $row->cells[] = $info['lastname'];
     $row->cells[] = $info['firstname'];
     $row->cells[] = $info['email'];
