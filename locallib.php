@@ -25,6 +25,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/*
+ * This functions tells if a user is allowed to display this block with all students
+ * @param int $courseid
+ * @return boolean
+ */
 function is_allowed_to_display_students($courseid) {
     global $context;
     if (has_capability('moodle/site:config', $context)) {

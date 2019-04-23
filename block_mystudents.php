@@ -17,7 +17,7 @@
 /**
  * Block displaying all the students I have in my courses.
  *
- * This block can be used to display easily the list of all student of my courses and their affiliation.
+ * This block can be used to display easily the list of all student of my courses.
  *
  * @package    block_mystudents
  * @copyright  2018 Namur University
@@ -27,7 +27,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-
+/**
+ * Block displaying all the students I have in my courses.
+ */
 class block_mystudents extends block_base {
     /**
      * block initializations
@@ -39,8 +41,6 @@ class block_mystudents extends block_base {
     /**
      * block contents
      * @param : /
-     * @global $CFG
-     * @global $OUTPUT
      * @return object
      */
     public function get_content() {
