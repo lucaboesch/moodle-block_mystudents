@@ -40,7 +40,6 @@ class block_mystudents extends block_base {
 
     /**
      * block contents
-     * @param : /
      * @return object
      */
     public function get_content() {
