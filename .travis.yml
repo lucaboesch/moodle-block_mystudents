@@ -4,10 +4,8 @@ sudo: true
 
 addons:
   firefox: "47.0.1"
-  postgresql: "9.4"
-  apt:
-    packages:
-      - oracle-java8-set-default
+  postgresql: "9.6"
+
 
 cache:
   directories:
@@ -17,6 +15,7 @@ cache:
 php:
  - 7.0
  - 7.1
+ - 7.2
 
 env:
  global:
