@@ -25,7 +25,6 @@
 
 require_once("../../config.php");
 require_once($CFG->dirroot.'/user/lib.php');
-require_once('./locallib.php');
 
 require_login();
 
@@ -44,12 +43,14 @@ $content = '';
 
 // Get course list.
 $mycourses = enrol_get_my_courses(null, 'fullname ASC');
+$hassiteconfig = has_capability('moodle/site:config', $context);
 $students = array();
 foreach ($mycourses as $course) {
-    $courseid = $course->id;
-    if (is_allowed_to_display_students($courseid)) {
+    $coursecontext = context_course::instance($course->id);
+    if ($hassiteconfig || has_capability('moodle/course:update', $coursecontext)) {        
+        $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         // For each course get all the users.
-        list ($select, $from, $where, $params) = user_get_participants_sql($courseid, 0, 0, 5);
+        list ($select, $from, $where, $params) = user_get_participants_sql($course->id, 0, 0, $studentrole->id);
         $list = $DB->get_recordset_sql("$select $from $where", $params);
         foreach ($list as $student) {
             $key = str_replace('', '_', $student->lastname) . '_' . str_replace('', '_', $student->firstname);
@@ -69,8 +70,8 @@ $table->head = array(get_string('lastname'), get_string('firstname'), get_string
 foreach ($students as $student => $info) {
     $courses = $info['courses'];
     $row = new html_table_row();
-    $row->cells[] = $info['lastname'];
-    $row->cells[] = $info['firstname'];
+    $row->cells[] = html_writer::link($CFG->wwwroot .'/user/profile.php?id='. $info['userid'], $info['lastname']);
+    $row->cells[] = html_writer::link($CFG->wwwroot .'/user/profile.php?id='. $info['userid'], $info['firstname']);
     $row->cells[] = $info['email'];
     $row->cells[] = implode(', ', $courses);
     $table->data[] = $row;

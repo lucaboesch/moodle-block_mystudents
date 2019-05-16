@@ -15,29 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * My students block.
+ * Privacy Subsystem implementation for block_mystudents.
  *
  * @package    block_mystudents
- * @copyright  2018 Namur University
- * @author     Laurence Dumortier <laurence.dumortier@unamur.be>
+ * @copyright  2019 Laurence Dumortier Namur University Belgium <laurence.dumortier@unamur.be>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace block_mystudents\privacy;
+
 defined('MOODLE_INTERNAL') || die();
 
-/*
- * This functions tells if a user is allowed to display this block with all students
- * @param int $courseid
- * @return boolean
+/**
+ * Privacy Subsystem for block_mystudents implementing null_provider.
+ *
+ * @copyright  2019 Laurence Dumortier Namur University Belgium <laurence.dumortier@unamur.be>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function is_allowed_to_display_students($courseid) {
-    global $context;
-    if (has_capability('moodle/site:config', $context)) {
-        return true;
+class provider implements \core_privacy\local\metadata\null_provider {
+
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
     }
-    $coursecontext = context_course::instance($courseid);
-    if (has_capability('moodle/course:update', $coursecontext)) {
-        return true;
-    }
-    return false;
 }
