@@ -60,7 +60,8 @@ class block_mystudents extends block_base {
         $this->content->footer = '';
 
         $icon = $OUTPUT->pix_icon('i/users', '');
-        $this->content->text = html_writer::link($CFG->wwwroot.'/blocks/mystudents/view.php', $icon.get_string('mystudents', 'block_mystudents'),
+        $this->content->text = html_writer::link($CFG->wwwroot.'/blocks/mystudents/view.php',
+                $icon.get_string('mystudents', 'block_mystudents'),
                array('title' => get_string('listofallpeople')));
         return $this->content;
     }

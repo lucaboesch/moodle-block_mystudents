@@ -47,7 +47,7 @@ $hassiteconfig = has_capability('moodle/site:config', $context);
 $students = array();
 foreach ($mycourses as $course) {
     $coursecontext = context_course::instance($course->id);
-    if ($hassiteconfig || has_capability('moodle/course:update', $coursecontext)) {        
+    if ($hassiteconfig || has_capability('moodle/course:update', $coursecontext)) {
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         // For each course get all the users.
         list ($select, $from, $where, $params) = user_get_participants_sql($course->id, 0, 0, $studentrole->id);
