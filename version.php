@@ -24,7 +24,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2018022702;
+$plugin->version   = 2019052001;
 $plugin->requires  = 2017050500;
 $plugin->component = 'block_mystudents';
 $plugin->release = 'v0.1';
