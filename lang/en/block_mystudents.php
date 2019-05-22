@@ -27,3 +27,4 @@ $string['mystudents:addinstance'] = 'Add a new student block';
 $string['mystudents:myaddinstance'] = 'Add a new student block';
 $string['pluginname'] = 'My students';
 $string['mystudents'] = 'My students';
+$string['privacy:metadata'] = 'The My students block only shows data stored in other locations.';
