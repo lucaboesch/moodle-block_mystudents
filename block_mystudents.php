@@ -29,6 +29,9 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Block displaying all the students I have in my courses.
+ * @copyright  2018 Namur University
+ * @author     Laurence Dumortier <laurence.dumortier@unamur.be>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_mystudents extends block_base {
     /**
