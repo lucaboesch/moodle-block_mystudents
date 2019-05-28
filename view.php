@@ -53,12 +53,15 @@ foreach ($mycourses as $course) {
         list ($select, $from, $where, $params) = user_get_participants_sql($course->id, 0, 0, $studentrole->id);
         $list = $DB->get_recordset_sql("$select $from $where", $params);
         foreach ($list as $student) {
-            $key = str_replace('', '_', $student->lastname) . '_' . str_replace('', '_', $student->firstname);
+            // By adding id in key we avoid homonymy.
+            $key = str_replace('', '_', $student->lastname) . '_' . str_replace('', '_', $student->firstname) . '_' . $student->id;
             if (!array_key_exists($key, $students)) {
                 $students[$key] = array('lastname' => $student->lastname, 'firstname' => $student->firstname,
                     'email' => $student->email, 'userid' => $student->id, 'courses' => array());
             }
-            $students[$key]['courses'][] = $course->shortname;
+            if (!array_key_exists($course->id, $students[$key]['courses'])) {
+                $students[$key]['courses'][$course->id] = $course->shortname;
+            }
         }
     }
 }
@@ -73,6 +76,9 @@ foreach ($students as $student => $info) {
     $row->cells[] = html_writer::link($CFG->wwwroot .'/user/profile.php?id='. $info['userid'], $info['lastname']);
     $row->cells[] = html_writer::link($CFG->wwwroot .'/user/profile.php?id='. $info['userid'], $info['firstname']);
     $row->cells[] = $info['email'];
+    foreach ($courses as $courseid => $coursecode) {
+        $courses[$courseid] = html_writer::link($CFG->wwwroot . '/course/view.php?id='.$courseid, $coursecode);
+    }
     $row->cells[] = implode(', ', $courses);
     $table->data[] = $row;
 }
