@@ -15,16 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Current user info block.
+ * My students block.
  *
- * @package    block_mystudent
- * @copyright  
- * @author     
+ * @package    block_mystudents
+ * @copyright  2018 Namur University
+ * @author     Laurence Dumortier <laurence.dumortier@unamur.be>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2018022702;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2017050500;        // Requires this Moodle version
-$plugin->component = 'block_mystudents'; // Full name of the plugin (used for diagnostics)
+$plugin->version   = 2018022702;
+$plugin->requires  = 2017050500;
+$plugin->component = 'block_mystudents';
+$plugin->release = 'v0.1';
+$plugin->maturity = MATURITY_ALPHA;

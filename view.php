@@ -15,11 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display profile for a particular user
+ * My students block.
  *
- * @package core_user
- * @copyright 1999 Martin Dougiamas  http://dougiamas.com
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    block_mystudents
+ * @copyright  2018 Namur University
+ * @author     Laurence Dumortier <laurence.dumortier@unamur.be>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once("../../config.php");
@@ -28,7 +29,6 @@ require_once('./locallib.php');
 
 require_login();
 
-   
 $PAGE->set_url(new moodle_url('/blocks/mystudents/view.php'));
 $context = context_system::instance();
 $PAGE->set_context($context);
@@ -42,49 +42,57 @@ echo $OUTPUT->box_start();
 
 $content = '';
 
-// obtenir la liste des cours
+// Get course list.
 $mycourses = enrol_get_my_courses(null, 'fullname ASC');
 $students = array();
 foreach ($mycourses as $course) {
     $courseid = $course->id;
     if (is_allowed_to_display_students($courseid)) {
-        // pour chaque cours, obtenir la liste des participants
-        $studentlist = get_student_list_for_course ($courseid);
-        foreach ($studentlist as $student) {
-            $key = str_replace('', '_', $student['lastname']) . '_' . str_replace('', '_', $student['firstname']);
-           //$key = strotoupper($key);
+        // For each course get all the users.
+        list ($select, $from, $where, $params) = user_get_participants_sql($courseid, 0, 0, 5);
+        $list = $DB->get_recordset_sql("$select $from $where", $params);
+        foreach ($list as $student) {
+            $key = str_replace('', '_', $student->lastname) . '_' . str_replace('', '_', $student->firstname);
             if (!array_key_exists($key, $students)) {
-                $students[$key] = array('lastname' => $student['lastname'], 'firstname' => $student['firstname'], 'userid' => $student['id'], 'courses' => array());
+                $students[$key] = array('lastname' => $student->lastname, 'firstname' => $student->firstname,
+                    'email' => $student->email, 'userid' => $student->id, 'courses' => array());
             }
             $students[$key]['courses'][] = $course->shortname;
         }
     }
 }
 ksort($students);
-//array_multisort($students, natsort(array_keys($students)));
-$table = new html_table();
-$table->head = array(get_string('lastname'), get_string('firstname'), get_string('progcode', 'block_mystudents'), get_string('progcodename', 'block_mystudents'), get_string('courses'));
 
-$programlist = get_unamur_program_list(); 
+$table = new html_table();
+$table->head = array(get_string('lastname'), get_string('firstname'), get_string('progcode', 'block_mystudents'),
+    get_string('email'), get_string('progcodename', 'block_mystudents'), get_string('courses'));
+
+/*
+ * @todo : Replace this function by a local function.
+ */
+$programlist = get_unamur_program_list();
 
 foreach ($students as $student => $info) {
     $courses = $info['courses'];
     $row = new html_table_row();
     $row->cells[] = $info['lastname'];
     $row->cells[] = $info['firstname'];
+    $row->cells[] = $info['email'];
+    
+    /*
+     * @todo : Replace this function by a local function.
+     */
     $progcode = get_ldap_prog_code_for_user($info['userid']);
     $row->cells[] = implode(', ', $progcode);
     $progcodenames = array();
-    foreach ($progcode as $key=>$elt) {
-        $progcodenames[$key] = $porgramlist[$elt];
+    foreach ($progcode as $key => $elt) {
+        $progcodenames[$key] = $programlist[$elt];
     }
     $row->cells[] = implode(', ', $progcodenames);
     $row->cells[] = implode(', ', $courses);
     $table->data[] = $row;
 }
 $content .= html_writer::table($table);
-
-
 
 echo $content;
 

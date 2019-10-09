@@ -14,16 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * My students block.
+ *
+ * @package    block_mystudents
+ * @copyright  2018 Namur University
+ * @author     Laurence Dumortier <laurence.dumortier@unamur.be>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
 function is_allowed_to_display_students($courseid) {
-    global $USER;
-    if (is_admin()) {
+    global $context;
+    if (has_capability('moodle/site:config', $context)) {
         return true;
     }
-    $teacherslist = get_teachers_list_for_course ($courseid);
-    foreach ($teacherslist as $teacher) {
-        if ($teacher['userid'] == $USER->id) {
-            return true;
-        }
+    $coursecontext = context_course::instance($courseid);
+    if (has_capability('moodle/course:update', $coursecontext)) {
+        return true;
     }
     return false;
 }

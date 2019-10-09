@@ -15,11 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_participants', language 'en', branch 'MOODLE_20_STABLE'
+ * My students block.
  *
- * @package   block_mystudents
- * @copyright 
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    block_mystudents
+ * @copyright  2018 Namur University
+ * @author     Laurence Dumortier <laurence.dumortier@unamur.be>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['mystudents:addinstance'] = 'Add a new student block';

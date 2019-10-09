@@ -15,27 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Block displaying information about current logged-in user.
+ * Block displaying all the students I have in my courses.
  *
- * This block can be used as anti cheating measure, you
- * can easily check the logged-in user matches the person
- * operating the computer.
+ * This block can be used to display easily the list of all student of my courses and their affiliation.
  *
- * @package    block_myprofile
- * @copyright  2010 Remote-Learner.net
- * @author     Olav Jordan <olav.jordan@remote-learner.ca>
+ * @package    block_mystudents
+ * @copyright  2018 Namur University
+ * @author     Laurence Dumortier <laurence.dumortier@unamur.be>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Displays the current user's profile information.
- *
- * @copyright  
- * @author     
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+
 class block_mystudents extends block_base {
     /**
      * block initializations
@@ -46,10 +38,13 @@ class block_mystudents extends block_base {
 
     /**
      * block contents
-     *
+     * @param : /
+     * @global $CFG
+     * @global $OUTPUT
      * @return object
      */
-    public function get_content() {global $CFG, $OUTPUT;
+    public function get_content() {
+        global $CFG, $OUTPUT;
 
         if (empty($this->instance)) {
             $this->content = '';
@@ -57,9 +52,9 @@ class block_mystudents extends block_base {
         }
 
         if (!isloggedin() or isguestuser()) {
-            return '';      // Never useful unless you are logged in as real users
+            return '';      // Never useful unless you are logged in as real users.
         }
-        
+
         $this->content = new stdClass();
         $this->content->items = array();
         $this->content->icons = array();
@@ -67,7 +62,7 @@ class block_mystudents extends block_base {
 
         $icon = $OUTPUT->pix_icon('i/users', '');
         $this->content->text = '<a title="'.get_string('listofallpeople').'" href="'.
-                                  $CFG->wwwroot.'/blocks/mystudents/view.php">'.$icon.get_string('mystudents', 'block_mystudents').'</a>';
+                $CFG->wwwroot.'/blocks/mystudents/view.php">'.$icon.get_string('mystudents', 'block_mystudents').'</a>';
         return $this->content;
     }
 
@@ -86,7 +81,6 @@ class block_mystudents extends block_base {
      * @return boolean
      */
     public function instance_allow_multiple() {
-        //allow more than one instance on a page
         return false;
     }
 
@@ -95,8 +89,7 @@ class block_mystudents extends block_base {
      *
      * @return boolean
      */
-    function instance_allow_config() {
-        //allow instances to have their own configuration
+    public function instance_allow_config() {
         return false;
     }
 
@@ -113,7 +106,7 @@ class block_mystudents extends block_base {
      * @return array
      */
     public function applicable_formats() {
-        return array('all' => false, 'my' =>true);
+        return array('all' => false, 'my' => true);
     }
 
     /**
