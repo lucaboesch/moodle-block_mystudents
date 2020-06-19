@@ -22,6 +22,18 @@
  * @author     Laurence Dumortier <laurence.dumortier@unamur.be>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace core_user\table;
+
+use context_system;
+use context_course;
+use core_user\table\participants_search;
+use core_table\local\filter\filter;
+use core_table\local\filter\integer_filter;
+use moodle_url;
+use html_table;
+use html_table_cell;
+use html_table_row;
+use html_writer;
 
 require_once("../../config.php");
 require_once($CFG->dirroot.'/user/lib.php');
@@ -50,18 +62,19 @@ foreach ($mycourses as $course) {
     if ($hassiteconfig || has_capability('moodle/course:update', $coursecontext)) {
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         // For each course get all the users.
-        list ($select, $from, $where, $params) = user_get_participants_sql($course->id, 0, 0, $studentrole->id);
-        $list = $DB->get_recordset_sql("$select $from $where", $params);
-        foreach ($list as $student) {
+        $course = $DB->get_record('course', array('id' => $course->id), '*', MUST_EXIST);
+        $filterset = new \core_user\table\participants_filterset();
+        $filterset->add_filter(new integer_filter('roles', filter::JOINTYPE_DEFAULT, [(int)$studentrole->id]));
+        $psearch = new participants_search($course, $coursecontext, $filterset);
+        $rawdata = $psearch->get_participants();
+        foreach ($rawdata as $student) {
             // By adding id in key we avoid homonymy.
-            $key = str_replace('', '_', $student->lastname) . '_' . str_replace('', '_', $student->firstname) . '_' . $student->id;
+            $key = str_replace('', '_', $student->lastname) . '_' . str_replace('', '_', $student->firstname);
             if (!array_key_exists($key, $students)) {
                 $students[$key] = array('lastname' => $student->lastname, 'firstname' => $student->firstname,
                     'email' => $student->email, 'userid' => $student->id, 'courses' => array());
             }
-            if (!array_key_exists($course->id, $students[$key]['courses'])) {
-                $students[$key]['courses'][$course->id] = $course->shortname;
-            }
+            $students[$key]['courses'][$course->id] = $course->shortname;
         }
     }
 }
