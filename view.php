@@ -23,6 +23,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace core_user\table;
+
+use context_system;
+use context_course;
+use moodle_url;
+use core_user\table\participants_search;
+use html_table;
+use html_table_row;
+use html_writer;
+
 require_once("../../config.php");
 require_once($CFG->dirroot.'/user/lib.php');
 
@@ -45,14 +55,19 @@ $content = '';
 $mycourses = enrol_get_my_courses(null, 'fullname ASC');
 $hassiteconfig = has_capability('moodle/site:config', $context);
 $students = array();
+ // For each course get all the users.
 foreach ($mycourses as $course) {
     $coursecontext = context_course::instance($course->id);
     if ($hassiteconfig || has_capability('moodle/course:update', $coursecontext)) {
-        $studentrole = $DB->get_record('role', array('shortname' => 'student'));
+        $studentrole = $DB->get_record('role', array('shortname' => 'student'));       
         // For each course get all the users.
-        list ($select, $from, $where, $params) = user_get_participants_sql($course->id, 0, 0, $studentrole->id);
-        $list = $DB->get_recordset_sql("$select $from $where", $params);
-        foreach ($list as $student) {
+        $filterset = new \core_user\table\participants_filterset();
+        // $participanttable = new \core_user\table\participants("user-index-participants-{$course->id}");
+        $coursecontext = context_course::instance($course->id, MUST_EXIST);
+        $psearch = new participants_search($course, $coursecontext, $filterset);
+        // $total = $psearch->get_total_participants_count($twhere, $tparams);
+        $rawdata = $psearch->get_participants();
+        foreach ($rawdata as $student) {
             // By adding id in key we avoid homonymy.
             $key = str_replace('', '_', $student->lastname) . '_' . str_replace('', '_', $student->firstname) . '_' . $student->id;
             if (!array_key_exists($key, $students)) {

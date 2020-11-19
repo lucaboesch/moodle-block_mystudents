@@ -24,8 +24,8 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2019052002;
-$plugin->requires  = 2017050500;
+$plugin->version   = 2020111901;
+$plugin->requires  = 2020061502;
 $plugin->component = 'block_mystudents';
-$plugin->release = 'v0.1';
+$plugin->release = 'v0.2';
 $plugin->maturity = MATURITY_ALPHA;
