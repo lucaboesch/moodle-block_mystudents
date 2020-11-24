@@ -59,13 +59,11 @@ $students = array();
 foreach ($mycourses as $course) {
     $coursecontext = context_course::instance($course->id);
     if ($hassiteconfig || has_capability('moodle/course:update', $coursecontext)) {
-        $studentrole = $DB->get_record('role', array('shortname' => 'student'));       
+        $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         // For each course get all the users.
         $filterset = new \core_user\table\participants_filterset();
-        // $participanttable = new \core_user\table\participants("user-index-participants-{$course->id}");
         $coursecontext = context_course::instance($course->id, MUST_EXIST);
         $psearch = new participants_search($course, $coursecontext, $filterset);
-        // $total = $psearch->get_total_participants_count($twhere, $tparams);
         $rawdata = $psearch->get_participants();
         foreach ($rawdata as $student) {
             // By adding id in key we avoid homonymy.
