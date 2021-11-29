@@ -60,7 +60,7 @@ foreach ($mycourses as $course) {
                     'email' => $student->email, 'userid' => $student->id, 'courses' => array());
             }
             if (!array_key_exists($course->id, $students[$key]['courses'])) {
-                $students[$key]['courses'][$course->id] = $course->shortname;
+                $students[$key]['courses'][$course->id] = format_text($course->shortname, true, ['context' => $coursecontext]);
             }
         }
     }
