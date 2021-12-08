@@ -50,8 +50,24 @@ foreach ($mycourses as $course) {
     if ($hassiteconfig || has_capability('moodle/course:update', $coursecontext)) {
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         // For each course get all the users.
-        list ($select, $from, $where, $params) = user_get_participants_sql($course->id, 0, 0, $studentrole->id);
-        $list = $DB->get_recordset_sql("$select $from $where", $params);
+        // For Moodle 3.9 and up, use the participants_search class.
+        if (file_exists("$CFG->dirroot/user/classes/table/participants_search.php")) {
+
+            $context = \context_course::instance($course->id);
+            $filterset = new \core_user\table\participants_filterset();
+
+            if ($studentrole->id > 0) { // Roleid of 0 means all participants, i.e. no filter.
+                $filter = new \core_table\local\filter\integer_filter('roles', null, [(int)$studentrole->id]);
+                $filterset->add_filter($filter);
+            }
+
+            $search = new \core_user\table\participants_search($course, $context, $filterset);
+            $list = $search->get_participants();
+
+        } else {
+            list ($select, $from, $where, $params) = user_get_participants_sql($course->id, 0, 0, $studentrole->id);
+            $list = $DB->get_recordset_sql("$select $from $where", $params);
+        }
         foreach ($list as $student) {
             // By adding id in key we avoid homonymy.
             $key = str_replace('', '_', $student->lastname) . '_' . str_replace('', '_', $student->firstname) . '_' . $student->id;
